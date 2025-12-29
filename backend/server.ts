@@ -49,9 +49,12 @@ app.get('/health', (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌐 CORS enabled for all origins`);
-});
+// Only start server if not in Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🌐 CORS enabled for all origins`);
+  });
+}
 
 export default app;
