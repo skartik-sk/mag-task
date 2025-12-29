@@ -127,7 +127,7 @@ export default function DocumentationSection() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes progressBar {
           0% {
             transform: translateX(-100%);
@@ -136,7 +136,7 @@ export default function DocumentationSection() {
             transform: translateX(0%);
           }
         }
-      `}</style>
+      `}} />
     </div>
   )
 }

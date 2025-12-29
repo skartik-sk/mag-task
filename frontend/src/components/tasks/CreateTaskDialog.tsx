@@ -29,7 +29,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  dueDate: z.date({ invalid_type_error: 'Due date is required' }),
+  dueDate: z.date(),
   priority: z.enum(['low', 'medium', 'high', 'urgent']),
 });
 

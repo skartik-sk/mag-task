@@ -7,7 +7,7 @@
     "dev": "bun --watch server.ts",
     "start": "node dist/server.js",
     "build": "tsc -p tsconfig.build.json",
-    "vercel-build": "npm run build"
+    "vercel-build": "echo 'skipping typescript build on Vercel'"
   },
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",

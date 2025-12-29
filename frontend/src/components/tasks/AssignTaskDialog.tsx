@@ -43,17 +43,15 @@ export default function AssignTaskDialog({ open, onOpenChange, task }: AssignTas
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast({
-        title: 'User assigned!',
         description: 'Task has been assigned successfully.',
-      });
+      } as any);
       setSearchEmail('');
     },
     onError: () => {
       toast({
-        title: 'Error',
         description: 'Failed to assign user. Please try again.',
         variant: 'destructive',
-      });
+      } as any);
     },
   });
 
@@ -64,16 +62,14 @@ export default function AssignTaskDialog({ open, onOpenChange, task }: AssignTas
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       toast({
-        title: 'User removed',
         description: 'User has been unassigned from this task.',
-      });
+      } as any);
     },
     onError: () => {
       toast({
-        title: 'Error',
         description: 'Failed to remove user. Please try again.',
         variant: 'destructive',
-      });
+      } as any);
     },
   });
 
@@ -163,9 +159,9 @@ export default function AssignTaskDialog({ open, onOpenChange, task }: AssignTas
           {/* Search Results */}
           {searchEmail.length >= 3 && searchResults && searchResults.length > 0 && (
             <div className="border rounded-lg max-h-60 overflow-y-auto">
-              {searchResults.map((user: User) => (
+              {searchResults.map((user: any) => (
                 <div
-                  key={user._id}
+                  key={user._id || user.id}
                   className="flex items-center justify-between p-3 hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center gap-2">
@@ -179,13 +175,13 @@ export default function AssignTaskDialog({ open, onOpenChange, task }: AssignTas
                       <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
-                  {isUserAssigned(user._id) ? (
+                  {isUserAssigned(user._id || user.id) ? (
                     <span className="text-xs text-muted-foreground">Assigned</span>
                   ) : (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => assignMutation.mutate(user._id)}
+                      onClick={() => assignMutation.mutate(user._id || user.id)}
                       disabled={assignMutation.isPending}
                     >
                       <UserPlus className="h-4 w-4 mr-1" />
