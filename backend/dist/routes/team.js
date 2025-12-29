@@ -1,0 +1,12 @@
+import express from 'express';
+import { createTeam, getTeams, inviteTeamMember, acceptInvitation, getTeamMembers, searchUsers, } from '../controllers/teamController';
+import { authenticate } from '../middleware/auth';
+const router = express.Router();
+router.use(authenticate);
+router.post('/', createTeam);
+router.get('/', getTeams);
+router.post('/:teamId/invite', inviteTeamMember);
+router.post('/:teamId/accept', acceptInvitation);
+router.get('/:teamId/members', getTeamMembers);
+router.get('/search/users', searchUsers);
+export default router;

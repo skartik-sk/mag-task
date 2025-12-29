@@ -5,7 +5,7 @@ backend/node_modules/
 
 # Build outputs
 frontend/dist/
-backend/dist/
+# backend/dist/ is needed for Vercel
 *.tsbuildinfo
 
 # Environment variables

@@ -3,8 +3,8 @@ node_modules
 
 # output
 out
-dist
 *.tgz
+# dist is needed for Vercel deployment
 
 # code coverage
 coverage
