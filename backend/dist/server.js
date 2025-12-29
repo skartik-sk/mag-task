@@ -10,8 +10,13 @@ import teamRoutes from './routes/team.js';
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (only if MONGODB_URI is set)
+if (process.env.MONGODB_URI) {
+    connectDB();
+}
+else {
+    console.warn('⚠️  MONGODB_URI not set - skipping database connection');
+}
 // CORS - Allow all origins for production
 const corsOptions = {
     origin: (origin, callback) => {
