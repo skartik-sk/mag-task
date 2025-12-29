@@ -1,15 +1,18 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "ES2022",
+    "lib": ["ES2022"],
     "moduleResolution": "node",
     "outDir": "./dist",
     "noEmit": false,
-    "verbatimModuleSyntax": false,
-    "allowImportingTsExtensions": false,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
