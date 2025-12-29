@@ -1,17 +1,23 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 import Team from '../models/Team';
 import User from '../models/User';
+import mongoose from 'mongoose';
 
 // Create a new team
-export const createTeam = async (req: Request, res: Response) => {
+export const createTeam = async (req: AuthRequest, res: Response) => {
   try {
     const { name } = req.body;
     const userId = req.user?.userId;
 
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const team = await Team.create({
       name,
-      owner: userId,
-      members: [{ user: userId, role: 'owner' }],
+      owner: new mongoose.Types.ObjectId(userId),
+      members: [{ user: new mongoose.Types.ObjectId(userId), role: 'owner' }],
     });
 
     res.status(201).json(team);
@@ -21,7 +27,7 @@ export const createTeam = async (req: Request, res: Response) => {
 };
 
 // Get user's teams
-export const getTeams = async (req: Request, res: Response) => {
+export const getTeams = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
 
@@ -36,7 +42,7 @@ export const getTeams = async (req: Request, res: Response) => {
 };
 
 // Invite team member
-export const inviteTeamMember = async (req: Request, res: Response) => {
+export const inviteTeamMember = async (req: AuthRequest, res: Response) => {
   try {
     const { teamId } = req.params;
     const { email, role = 'member' } = req.body;
@@ -61,10 +67,14 @@ export const inviteTeamMember = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Already invited' });
     }
 
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     team.invitations.push({
       email,
       role,
-      invitedBy: userId,
+      invitedBy: new mongoose.Types.ObjectId(userId),
       invitedAt: new Date(),
       status: 'pending',
     });
@@ -78,7 +88,7 @@ export const inviteTeamMember = async (req: Request, res: Response) => {
 };
 
 // Accept invitation
-export const acceptInvitation = async (req: Request, res: Response) => {
+export const acceptInvitation = async (req: AuthRequest, res: Response) => {
   try {
     const { teamId } = req.params;
     const userEmail = req.user?.email;
@@ -97,12 +107,16 @@ export const acceptInvitation = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Invitation not found' });
     }
 
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     // Update invitation status
     invitation.status = 'accepted';
 
     // Add user to members
     team.members.push({
-      user: userId,
+      user: new mongoose.Types.ObjectId(userId),
       role: invitation.role,
       joinedAt: new Date(),
     });
@@ -116,7 +130,7 @@ export const acceptInvitation = async (req: Request, res: Response) => {
 };
 
 // Get team members
-export const getTeamMembers = async (req: Request, res: Response) => {
+export const getTeamMembers = async (req: AuthRequest, res: Response) => {
   try {
     const { teamId } = req.params;
 
@@ -133,16 +147,16 @@ export const getTeamMembers = async (req: Request, res: Response) => {
 };
 
 // Search users by email
-export const searchUsers = async (req: Request, res: Response) => {
+export const searchUsers = async (req: AuthRequest, res: Response) => {
   try {
     const { email } = req.query;
 
-    if (!email) {
+    if (!email || typeof email !== 'string') {
       return res.status(400).json({ message: 'Email required' });
     }
 
     const users = await User.find({
-      email: { $regex: email, $options: 'i' },
+      email: { $regex: email as string, $options: 'i' },
     })
       .select('name email')
       .limit(10);

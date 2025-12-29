@@ -5,8 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch server.ts",
-    "start": "node server.js",
-    "build": "tsc"
+    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.build.json",
+    "vercel-build": "npm run build"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

@@ -7,12 +7,12 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
   try {
     const { email } = req.query;
 
-    if (!email) {
+    if (!email || typeof email !== 'string') {
       return res.status(400).json({ message: 'Email query required' });
     }
 
     const users = await User.find({
-      email: { $regex: email, $options: 'i' },
+      email: { $regex: email as string, $options: 'i' },
       _id: { $ne: req.user?.id },
     })
       .select('name email avatar')
