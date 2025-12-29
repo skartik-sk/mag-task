@@ -2,8 +2,8 @@ import { Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
-import User from '../models/User';
-import { AuthRequest } from '../middleware/auth';
+import User from '../models/User.js';
+import { AuthRequest } from '../middleware/auth.js';
 
 export const register = async (req: AuthRequest, res: Response) => {
   try {

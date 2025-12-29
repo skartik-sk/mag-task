@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import User from '../models/User';
-import Task from '../models/Task';
-import { AuthRequest } from '../middleware/auth';
+import User from '../models/User.js';
+import Task from '../models/Task.js';
+import { AuthRequest } from '../middleware/auth.js';
 
 export const searchUsers = async (req: AuthRequest, res: Response) => {
   try {

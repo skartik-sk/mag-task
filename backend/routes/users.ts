@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { searchUsers, assignUserToTask, removeUserFromTask } from '../controllers/userController';
-import { auth } from '../middleware/auth';
+import { searchUsers, assignUserToTask, removeUserFromTask } from '../controllers/userController.js';
+import { auth } from '../middleware/auth.js';
 
 const router = Router();
 

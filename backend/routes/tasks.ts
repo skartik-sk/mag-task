@@ -8,8 +8,8 @@ import {
   deleteTask,
   updateTaskStatus,
   updateTaskPriority,
-} from '../controllers/taskController';
-import { auth } from '../middleware/auth';
+} from '../controllers/taskController.js';
+import { auth } from '../middleware/auth.js';
 
 const router = Router();
 

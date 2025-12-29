@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { AuthRequest } from '../middleware/auth';
-import Team from '../models/Team';
-import User from '../models/User';
+import { AuthRequest } from '../middleware/auth.js';
+import Team from '../models/Team.js';
+import User from '../models/User.js';
 import mongoose from 'mongoose';
 
 // Create a new team

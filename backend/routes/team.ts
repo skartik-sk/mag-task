@@ -6,8 +6,8 @@ import {
   acceptInvitation,
   getTeamMembers,
   searchUsers,
-} from '../controllers/teamController';
-import { authenticate } from '../middleware/auth';
+} from '../controllers/teamController.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
