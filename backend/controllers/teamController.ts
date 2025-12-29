@@ -1,5 +1,5 @@
-import { Response } from 'express';
-import { AuthRequest } from '../middleware/auth.js';
+import type { Response } from 'express';
+import type { AuthRequest } from '../middleware/auth.js';
 import Team from '../models/Team.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';

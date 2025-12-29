@@ -1,7 +1,7 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { validationResult } from 'express-validator';
 import Task from '../models/Task.js';
-import { AuthRequest } from '../middleware/auth.js';
+import type { AuthRequest } from '../middleware/auth.js';
 
 export const getTasks = async (req: AuthRequest, res: Response) => {
   try {
