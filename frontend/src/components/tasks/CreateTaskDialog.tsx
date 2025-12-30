@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
+import { X } from 'lucide-react';
 
 import api from '@/lib/api';
 import { Button } from '@/components/ui/button';
@@ -25,12 +26,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { DatePicker } from '@/components/ui/date-picker';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
   dueDate: z.date(),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
 });
 
 type TaskForm = z.infer<typeof taskSchema>;
@@ -44,6 +46,8 @@ interface CreateTaskDialogProps {
 
 export default function CreateTaskDialog({ open, onOpenChange, onSuccess, initialDate }: CreateTaskDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [assignedEmails, setAssignedEmails] = useState<string[]>([]);
+  const [emailInput, setEmailInput] = useState('');
 
   const {
     register,
@@ -70,15 +74,39 @@ export default function CreateTaskDialog({ open, onOpenChange, onSuccess, initia
   const dueDate = watch('dueDate');
   const priority = watch('priority');
 
+  const addEmail = () => {
+    const email = emailInput.trim().toLowerCase();
+    if (email && !assignedEmails.includes(email) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setAssignedEmails([...assignedEmails, email]);
+      setEmailInput('');
+    } else if (email) {
+      toast.error('Please enter a valid email address');
+    }
+  };
+
+  const removeEmail = (email: string) => {
+    setAssignedEmails(assignedEmails.filter(e => e !== email));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addEmail();
+    }
+  };
+
   const onSubmit = async (data: TaskForm) => {
     setIsLoading(true);
     try {
       await api.post('/tasks', {
         ...data,
         dueDate: data.dueDate.toISOString(),
+        assignedEmails: assignedEmails.length > 0 ? assignedEmails : undefined,
       });
       toast.success('Task created successfully');
       reset();
+      setAssignedEmails([]);
+      setEmailInput('');
       onSuccess();
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to create task');
@@ -146,6 +174,47 @@ export default function CreateTaskDialog({ open, onOpenChange, onSuccess, initia
                 <SelectItem value="urgent">Urgent</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="assignedEmails">Assign Members (by email)</Label>
+            <div className="flex gap-2">
+              <Input
+                id="assignedEmails"
+                type="email"
+                placeholder="Enter email and press Enter"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <Button type="button" onClick={addEmail} variant="outline">
+                Add
+              </Button>
+            </div>
+            {assignedEmails.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {assignedEmails.map((email) => (
+                  <div
+                    key={email}
+                    className="flex items-center gap-2 bg-secondary px-3 py-1 rounded-full text-sm"
+                  >
+                    <Avatar className="w-5 h-5">
+                      <AvatarFallback className="text-xs">
+                        {email.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeEmail(email)}
+                      className="hover:text-red-500 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <DialogFooter>

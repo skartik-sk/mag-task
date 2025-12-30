@@ -8,6 +8,8 @@ import {
   deleteTask,
   updateTaskStatus,
   updateTaskPriority,
+  assignUserByEmail,
+  unassignUser,
 } from '../controllers/taskController.js';
 import { auth } from '../middleware/auth.js';
 
@@ -23,9 +25,14 @@ router.post(
   [
     body('title').trim().notEmpty().withMessage('Title is required'),
     body('dueDate').isISO8601().withMessage('Valid due date is required'),
+    body('assignedEmails').optional().isArray().withMessage('Assigned emails must be an array'),
   ],
   createTask
 );
+
+router.post('/:id/assign-by-email', auth, assignUserByEmail);
+
+router.delete('/:id/unassign/:userId', auth, unassignUser);
 
 router.put('/:id', auth, updateTask);
 

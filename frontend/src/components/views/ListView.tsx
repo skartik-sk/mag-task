@@ -134,20 +134,23 @@ export default function ListView({ tasks, isLoading, pagination, onPageChange, o
                   Due: {format(new Date(task.dueDate), 'MMM d, yyyy')}
                 </span>
 
-                {task.assignedTo.length > 0 && (
-                  <div className="flex -space-x-2">
-                    {task.assignedTo.slice(0, 3).map((user) => (
-                      <Avatar key={user.id} className="h-6 w-6 border-2 border-background">
-                        <AvatarFallback className="text-xs">
-                          {user.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                    {task.assignedTo.length > 3 && (
-                      <div className="h-6 w-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
-                        <span className="text-xs">+{task.assignedTo.length - 3}</span>
-                      </div>
-                    )}
+                {task.assignedTo && task.assignedTo.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Assigned to:</span>
+                    <div className="flex -space-x-2">
+                      {task.assignedTo.slice(0, 3).map((user) => (
+                        <Avatar key={user._id || user.id} className="h-6 w-6 border-2 border-background" title={user.name}>
+                          <AvatarFallback className="text-xs">
+                            {user.name.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      ))}
+                      {task.assignedTo.length > 3 && (
+                        <div className="h-6 w-6 rounded-full bg-muted border-2 border-background flex items-center justify-center" title={`+${task.assignedTo.length - 3} more`}>
+                          <span className="text-xs">+{task.assignedTo.length - 3}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
