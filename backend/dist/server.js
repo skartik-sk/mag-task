@@ -9,7 +9,7 @@ import userRoutes from './routes/users.js';
 import teamRoutes from './routes/team.js';
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 // Connect to MongoDB (only if MONGODB_URI is set)
 if (process.env.MONGODB_URI) {
     connectDB();
@@ -29,7 +29,7 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
+app.options(/.*/, cors(corsOptions));
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
