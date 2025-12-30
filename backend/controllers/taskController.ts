@@ -166,35 +166,31 @@ export const updateTask = async (req: AuthRequest, res: Response) => {
     if (priority) task.priority = priority;
     if (status) task.status = status;
 
-    // Only task creator can update assignees
-    if (task.createdBy.toString() === req.user?.id) {
+    // Handle assignment updates (email-based or ID-based)
+    if (assignedEmails !== undefined && Array.isArray(assignedEmails)) {
+      console.log('📧 Updating assignments via emails:', assignedEmails);
       let assignedUserIds: mongoose.Types.ObjectId[] = [];
       
-      // Start with any assignedTo IDs from request
-      if (assignedTo !== undefined && Array.isArray(assignedTo)) {
-        assignedUserIds = assignedTo.map((id: any) =>
-          typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id
-        );
-      }
-
-      // Handle email-based assignment updates
-      if (assignedEmails && Array.isArray(assignedEmails) && assignedEmails.length > 0) {
+      // Convert all emails to user IDs
+      if (assignedEmails.length > 0) {
         for (const email of assignedEmails) {
           const user = await User.findOne({ email: email.toLowerCase().trim() });
           if (user) {
-            const userIdString = user._id.toString();
-            const isAlreadyAssigned = assignedUserIds.some(id => id.toString() === userIdString);
-            if (!isAlreadyAssigned) {
-              assignedUserIds.push(user._id);
-            }
+            assignedUserIds.push(user._id);
+            console.log('✅ Found user for email:', email, '→', user.name);
+          } else {
+            console.log('❌ User not found for email:', email);
           }
         }
       }
       
-      // Only update if there are changes to assignments
-      if (assignedTo !== undefined || (assignedEmails && assignedEmails.length > 0)) {
-        task.assignedTo = assignedUserIds;
-      }
+      task.assignedTo = assignedUserIds;
+      console.log('📊 Updated assignedTo array:', assignedUserIds);
+    } else if (assignedTo !== undefined && Array.isArray(assignedTo)) {
+      // Handle direct ID-based assignment updates
+      task.assignedTo = assignedTo.map((id: any) =>
+        typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id
+      );
     }
 
     await task.save();

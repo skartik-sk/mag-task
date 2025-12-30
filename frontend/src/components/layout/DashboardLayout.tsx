@@ -24,12 +24,10 @@ import {
   LogOut,
   Menu,
   CheckSquare,
-  Sparkles,
   User,
   Settings,
   Filter,
 } from 'lucide-react';
-import AIChatDialog from '@/components/ai/AIChatDialog';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -59,7 +57,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [aiChatOpen, setAiChatOpen] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
 
@@ -183,19 +180,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <Separator className="my-4" />
           </>
         )}
-
-        {/* AI Assistant Button */}
-        <Button
-          variant="outline"
-          className="w-full justify-start border-primary/20 hover:bg-primary/10"
-          onClick={() => {
-            setAiChatOpen(true);
-            setMobileMenuOpen(false);
-          }}
-        >
-          <Sparkles className="w-5 h-5 text-primary" />
-          <span className="ml-2">AI Assistant</span>
-        </Button>
       </nav>
 
       {/* User Section at Bottom */}
@@ -315,9 +299,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {children}
           </div>
         </main>
-
-        {/* AI Chat Dialog */}
-        <AIChatDialog open={aiChatOpen} onOpenChange={setAiChatOpen} />
       </div>
     </FilterContext.Provider>
   );

@@ -34,7 +34,7 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
+*.sh
 # Markdown files (documentation only, not needed in repo)
 *.md
 !README.md

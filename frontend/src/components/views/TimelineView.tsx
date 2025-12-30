@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import type { Task } from '@/types';
 import TaskDetailSheet from '@/components/tasks/TaskDetailSheet';
 
@@ -57,7 +58,7 @@ export default function TimelineView({ tasks, onRefetch }: TimelineViewProps) {
                           {task.description}
                         </p>
                       )}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex flex-wrap items-center gap-2 mt-2">
                         <Badge
                           variant="outline"
                           className={`${priorityColors[task.priority]} text-white border-0`}
@@ -65,6 +66,27 @@ export default function TimelineView({ tasks, onRefetch }: TimelineViewProps) {
                           {task.priority}
                         </Badge>
                         <Badge variant="outline">{task.status}</Badge>
+                        {task.assignedTo && task.assignedTo.length > 0 && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-muted-foreground">
+                              {task.assignedTo.length} assigned
+                            </span>
+                            <div className="flex -space-x-1">
+                              {task.assignedTo.slice(0, 3).map((user) => (
+                                <Avatar key={user._id} className="h-5 w-5 border border-background" title={user.name}>
+                                  <AvatarFallback className="text-xs">
+                                    {user.name.slice(0, 2).toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                              ))}
+                              {task.assignedTo.length > 3 && (
+                                <div className="h-5 w-5 rounded-full bg-muted border border-background flex items-center justify-center" title={`+${task.assignedTo.length - 3} more`}>
+                                  <span className="text-xs">+{task.assignedTo.length - 3}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

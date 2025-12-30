@@ -187,8 +187,8 @@ magnet-brains/
 
 ### Backend (.env)
 ```
-PORT=5000
-MONGODB_URI=MONGODB_URI=your_mongodb_connection_string_here
+PORT=7001
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 NODE_ENV=development
 ```

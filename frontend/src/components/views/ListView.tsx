@@ -136,12 +136,14 @@ export default function ListView({ tasks, isLoading, pagination, onPageChange, o
 
                 {task.assignedTo && task.assignedTo.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Assigned to:</span>
+                    <span className="text-sm text-muted-foreground">
+                      Assigned to {task.assignedTo.length} {task.assignedTo.length === 1 ? 'person' : 'people'}
+                    </span>
                     <div className="flex -space-x-2">
                       {task.assignedTo.slice(0, 3).map((user) => (
-                        <Avatar key={user._id || user.id} className="h-6 w-6 border-2 border-background" title={user.name}>
+                        <Avatar key={user._id} className="h-6 w-6 border-2 border-background" title={user.name || 'Unknown'}>
                           <AvatarFallback className="text-xs">
-                            {user.name.slice(0, 2).toUpperCase()}
+                            {user.name ? user.name.slice(0, 2).toUpperCase() : 'NA'}
                           </AvatarFallback>
                         </Avatar>
                       ))}

@@ -11,7 +11,7 @@ import teamRoutes from './routes/team.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 7001;
 
 // Connect to MongoDB (only if MONGODB_URI is set)
 if (process.env.MONGODB_URI) {
@@ -20,18 +20,40 @@ if (process.env.MONGODB_URI) {
   console.warn('⚠️  MONGODB_URI not set - skipping database connection');
 }
 
-// CORS - Allow all origins for production
+// CORS configuration for Vercel and production
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+  'https://magnet-brains.vercel.app',
+  'https://magnet-brains-*.vercel.app', // Vercel preview deployments
+];
+
 const corsOptions = {
   origin: (origin: any, callback: any) => {
-    // Allow all origins
-    callback(null, true);
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowed list or matches pattern
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        const pattern = allowed.replace('*', '.*');
+        return new RegExp(pattern).test(origin);
+      }
+      return allowed === origin;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all for now, restrict later if needed
+    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
 };
-
 
 app.use(cors(corsOptions));
 // Middleware
