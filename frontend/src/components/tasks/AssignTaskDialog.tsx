@@ -103,39 +103,7 @@ export default function AssignTaskDialog({ open, onOpenChange, task }: AssignTas
           {task.assignedTo && task.assignedTo.length > 0 && (
             <div>
               <h4 className="text-sm font-medium mb-2">Assigned to:</h4>
-              <div className="space-y-2">
-                {task.assignedTo.map((assigned: any) => {
-                  const user = typeof assigned === 'string' ? null : assigned;
-                  if (!user) return null;
-                  
-                  return (
-                    <div
-                      key={user._id}
-                      className="flex items-center justify-between p-2 border rounded-lg"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                            {getInitials(user.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">{user.name}</p>
-                          <p className="text-xs text-muted-foreground">{user.email}</p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => unassignMutation.mutate(user._id)}
-                        disabled={unassignMutation.isPending}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
+           
             </div>
           )}
 
